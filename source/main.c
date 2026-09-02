@@ -43,13 +43,13 @@ int main(int argc, char **argv)
     int y0=150;
 
     int x1=rand() % 200;
-    int y1=-32;
+    int y1=-30;
 
     int x2=rand() % 200;
-    int y2=-64;
+    int y2=-60;
 
-    int speed1_y=1+(rand()%3);
-    int speed2_y =2+(rand()%2);
+    int speed1_y=1+(rand()%10);
+    int speed2_y =2+(rand()%10);
     
     int score=0;
     int hiScore=0;
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
     consoleDemoInit();
     printf("UpperTale\n");
-    printf("プレイヤーは攻撃を下げてください\n");
+    printf("プレイヤーは攻撃を避けてください\n");
     printf("Score    : %d\n", score);
     printf("Hi-Score : %d\n", hiScore);
 
@@ -82,14 +82,14 @@ int main(int argc, char **argv)
             if (y1 > 192) {
                 y1 = -32;
                 x1 = rand() % 200;
-                speed1_y = 1 + (rand() % 3);
+                speed1_y = 1 + (rand() % 10);
             }
 
             y2 += speed2_y;
             if (y2 > 192) {
                 y2 = -32;
                 x2 = rand() % 200;
-                speed2_y = 2 + (rand() % 2);
+                speed2_y = 2 + (rand() % 10);
             }
 
             score++;
