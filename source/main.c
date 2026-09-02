@@ -13,6 +13,15 @@
 #include "nds/interrupts.h"
 #include "nds/ndstypes.h"
 #include "clang.h"
+#include "rock.h"
+
+typedef struct {
+    int x;
+    int y;
+}Splite;
+
+
+
 int main(int argc, char **argv)
 {
     videoSetMode(MODE_0_2D);
@@ -30,8 +39,8 @@ int main(int argc, char **argv)
 
 
     vramSetBankB(VRAM_B_MAIN_SPRITE);
-    oamInit(&oamMain,SpriteMapping_1D_32,false);
-    u16 *gfxMain = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_16Color);
+    oamInit(&oamMain,SpriteMapping_1D_128,false);
+    u16 *gfxMain = oamAllocateGfx(&oamMain, SpriteSize_64x64, SpriteColorFormat_256Color);
 
     memcpy(gfxMain, clangTiles, clangTilesLen);
     memcpy(SPRITE_PALETTE, clangPal, clangPalLen);
