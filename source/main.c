@@ -13,6 +13,7 @@
 #include "nds/interrupts.h"
 #include "nds/ndstypes.h"
 #include "clang.h"
+#include "rock.h"
 
 typedef struct {
     int x;
@@ -38,8 +39,8 @@ int main(int argc, char **argv)
 
 
     vramSetBankB(VRAM_B_MAIN_SPRITE);
-    oamInit(&oamMain,SpriteMapping_1D_32,false);
-    u16 *gfxMain = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_16Color);
+    oamInit(&oamMain,SpriteMapping_1D_128,false);
+    u16 *gfxMain = oamAllocateGfx(&oamMain, SpriteSize_64x64, SpriteColorFormat_256Color);
 
     memcpy(gfxMain, clangTiles, clangTilesLen);
     memcpy(SPRITE_PALETTE, clangPal, clangPalLen);
@@ -47,8 +48,16 @@ int main(int argc, char **argv)
     int p_x = 128 - 32;
     int p_y = 125;
 
-    oamSet(&oamMain, 0, p_x, p_y, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
+    oamSet(&oamMain, 0, p_x, p_y, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
 
+
+    memcpy(gfxMain, rockTiles, rockTilesLen);
+    memcpy(SPRITE_PALETTE, rockPal, rockPalLen);
+
+    int b_x = 128 + 32;
+    int b_y = 150;
+
+    oamSet(&oamMain, 1, b_x, b_y, 0, 0, SpriteSize_64x64, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
 
 
 
@@ -68,6 +77,7 @@ int main(int argc, char **argv)
     while(1){
         swiWaitForVBlank();
         oamSetXY(&oamMain, 0, p_x, p_y);
+        oamSetXY(&oamMain, 1, b_x, b_y);
       
        
 
@@ -84,7 +94,9 @@ int main(int argc, char **argv)
         if (keys_held & KEY_RIGHT) p_x++;
 
      
-
+        if (keys_held & KEY_UP) b_y++;
+       
+        if (keys_held & KEY_DOWN) b_y--;
        
     }
     return 0;
