@@ -44,10 +44,10 @@ int main(int argc, char **argv)
     memcpy(gfxMain, clangTiles, clangTilesLen);
     memcpy(SPRITE_PALETTE, clangPal, clangPalLen);
 
-    int x = 128 - 32;
-    int y = 125;
+    int p_x = 128 - 32;
+    int p_y = 125;
 
-    oamSet(&oamMain, 0, x, y, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
+    oamSet(&oamMain, 0, p_x, p_y, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
 
 
 
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 
     while(1){
         swiWaitForVBlank();
-        oamSetXY(&oamMain, 0, x, y);
+        oamSetXY(&oamMain, 0, p_x, p_y);
       
        
 
@@ -76,9 +76,9 @@ int main(int argc, char **argv)
 
         // キーを押したら移動
      
-        if (keys_held & KEY_LEFT) x--;
+        if (keys_held & KEY_LEFT) p_x--;
        
-        if (keys_held & KEY_RIGHT) x++;
+        if (keys_held & KEY_RIGHT) p_x++;
 
      
 
