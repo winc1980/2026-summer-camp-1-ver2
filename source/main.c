@@ -51,6 +51,9 @@ int main(int argc, char **argv)
 
 
 
+
+
+
     consoleDemoInit();
 
     printf("PAD:Scroll background");
