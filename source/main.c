@@ -48,8 +48,19 @@ int main(int argc, char **argv)
     int x2 = rand() % 224;
     int y2 = -64;
 
+    int x3 =100;
+    int y3 =100;
+
+    int x4 = rand() % 224;
+    int y4 =  -64;
+
+
     int speed1_y = 1 + (rand() % 3);
     int speed2_y = 2 + (rand() % 2);
+   
+    int speed4_y = 1 + (rand() % 2);
+    
+    
     
     int score = 0;
     int hiScore = 0;
@@ -58,6 +69,8 @@ int main(int argc, char **argv)
     oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
     oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
     oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
+    oamSet(&oamMain, 3, x3, y3, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
+    oamSet(&oamMain, 4, x4, y4, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
 
     consoleDemoInit();
     printf("=== DODGE THE ROCKS ===\n");
@@ -92,6 +105,17 @@ int main(int argc, char **argv)
                 speed2_y = 2 + (rand() % 2);
             }
 
+            x3 += 4;
+           
+             y4 += speed4_y;
+             x4 += 3;
+              if (y4 > 192) {
+                y4 = -32;
+                x4 = rand() % 224;
+                speed4_y = 2 + (rand() % 2);
+            }
+
+
             score++;
             if(score > hiScore){
                 hiScore = score;
@@ -101,7 +125,8 @@ int main(int argc, char **argv)
             printf("\x1b[6;13H%d\n", hiScore);
 
             if ((abs(x0 - x1) < 20 && abs(y0 - y1) < 20) || 
-                (abs(x0 - x2) < 20 && abs(y0 - y2) < 20)) {
+                (abs(x0 - x2) < 20 && abs(y0 - y2) < 20) || (abs(x0 - x3) < 20 && abs(y0 - y3) < 20)||
+                (abs(x0 - x4) < 20 && abs(y0 - y4) < 20)) {
                 
                 isGameOver = true;
                 
@@ -118,8 +143,16 @@ int main(int argc, char **argv)
                 y1 = -32;
                 x2 = rand() % 224;
                 y2 = -64;
+                x3 = -50;
+                x4 = rand() % 224;
+                y4 = -32;
+
+
+
                 speed1_y = 1 + (rand() % 3);
                 speed2_y = 2 + (rand() % 2);
+              
+                
                 score = 0;
                 isGameOver = false;
 
@@ -133,7 +166,8 @@ int main(int argc, char **argv)
         oamSetXY(&oamMain, 0, x0, y0);
         oamSetXY(&oamMain, 1, x1, y1);
         oamSetXY(&oamMain, 2, x2, y2);
-        
+        oamSetXY(&oamMain, 3, x3, y3);
+        oamSetXY(&oamMain, 4, x4, y4);
         oamUpdate(&oamMain);
     }
     return 0;
