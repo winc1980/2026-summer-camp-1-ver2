@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     videoSetMode(MODE_0_2D);
 
     vramSetBankA(VRAM_A_MAIN_BG);
-
+    
     int bg=bgInitHidden(0, BgType_Text8bpp, BgSize_B8_256x256, 0, 1);
 
     memcpy(bgGetGfxPtr(bg), bg0Tiles, bg0TilesLen);
@@ -45,42 +45,26 @@ int main(int argc, char **argv)
     memcpy(gfxMain, clangTiles, clangTilesLen);
     memcpy(SPRITE_PALETTE, clangPal, clangPalLen);
 
-    int p_x = 128 - 32;
-    int p_y = 125;
+    int x0 = 100;
+    int y0 = 100;
 
-    oamSet(&oamMain, 0, p_x, p_y, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
+    int x1 = 120;
+    int y1 = 0;
 
-
-    memcpy(gfxMain, rockTiles, rockTilesLen);
-    memcpy(SPRITE_PALETTE, rockPal, rockPalLen);
-
-    int b_x = 128 + 32;
-    int b_y = 150;
-
-    oamSet(&oamMain, 1, b_x, b_y, 0, 0, SpriteSize_64x64, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
-
-
-
-
+    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
+    oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
 
     consoleDemoInit();
 
     printf("PAD:Scroll background");
 
-
-   
-
-
-  
-
-
     while(1){
         swiWaitForVBlank();
-        oamSetXY(&oamMain, 0, p_x, p_y);
-        oamSetXY(&oamMain, 1, b_x, b_y);
-      
-       
 
+         oamSetXY(&oamMain, 0, x0, y0);
+         oamSetXY(&oamMain, 1, x1, y1);
+        // 回転・拡大縮小
+        
         oamUpdate(&oamMain);
 
         scanKeys();
@@ -88,18 +72,32 @@ int main(int argc, char **argv)
         u16 keys_held = keysHeld();
 
         // キーを押したら移動
-     
-        if (keys_held & KEY_LEFT) p_x--;
-       
-        if (keys_held & KEY_RIGHT) p_x++;
+        if(abs(x0-x1)<10 && abs(y0-y1)<10){
+            printf("\x1b[10;10HGAME OVER!");
+            printf("\x1b[12;5HPress A to Restart");
+        }else{
+             if (keys_held & KEY_LEFT) {
+            x0--;
+        }
+        if (keys_held & KEY_RIGHT) {
+            x0++;
+        }
+        if (keys_held & KEY_UP) {
+            y0--;
+        }
+        if (keys_held & KEY_DOWN) {
+            y0++;
+        }
 
-     
-        if (keys_held & KEY_UP) b_y++;
-       
-        if (keys_held & KEY_DOWN) b_y--;
-       
+        y1 += 1;
+
+        if (y1 > 192) {
+            y1 = -32;
+        }
+        }
     }
     return 0;
-
-
 }
+    
+
+
