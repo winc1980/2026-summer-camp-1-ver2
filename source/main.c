@@ -16,121 +16,125 @@
 #include "clang.h"
 #include "rock.h"
 
-typedef struct {
-    int x;
-    int y;
-}Splite;
-
-
-
 int main(int argc, char **argv)
 {
     videoSetMode(MODE_0_2D);
 
     vramSetBankA(VRAM_A_MAIN_BG);
-    
-    int bg=bgInitHidden(0, BgType_Text8bpp, BgSize_B8_256x256, 0, 1);
-
+    int bg = bgInitHidden(0, BgType_Text8bpp, BgSize_B8_256x256, 0, 1);
     memcpy(bgGetGfxPtr(bg), bg0Tiles, bg0TilesLen);
-    memcpy(bgGetMapPtr(bg),bg0Map,bg0MapLen);
-
+    memcpy(bgGetMapPtr(bg), bg0Map, bg0MapLen);
     memcpy(BG_PALETTE, bg0Pal, bg0PalLen);
 
     bgShow(bg);
 
-
     vramSetBankB(VRAM_B_MAIN_SPRITE);
-    oamInit(&oamMain,SpriteMapping_1D_128,false);
-    u16 *gfxMain = oamAllocateGfx(&oamMain, SpriteSize_64x64, SpriteColorFormat_256Color);
+    oamInit(&oamMain, SpriteMapping_1D_128, false);
 
+    u16 *gfxMain = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
     memcpy(gfxMain, clangTiles, clangTilesLen);
     memcpy(SPRITE_PALETTE, clangPal, clangPalLen);
  
-    u16 *gfxheart = oamAllocateGfx(&oamMain, SpriteSize_64x64, SpriteColorFormat_256Color);
-    memcpy(gfxheart,rockTiles,rockTilesLen);
-    memcpy(SPRITE_PALETTE,rockPal, rockPalLen);
+    u16 *gfxheart = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
+    memcpy(gfxheart, rockTiles, rockTilesLen);
+    memcpy(SPRITE_PALETTE, rockPal, rockPalLen);
+
+    int x0 = 112;
+    int y0 = 150;
+
+    int x1 = rand() % 224;
+    int y1 = -32;
+
+    int x2 = rand() % 224;
+    int y2 = -64;
+
+    int speed1_y = 1 + (rand() % 3);
+    int speed2_y = 2 + (rand() % 2);
     
+    int score = 0;
+    int hiScore = 0;
+    bool isGameOver = false;
 
+    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
+    oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
+    oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
 
-
-    int x0 = 100;
-    int y0 = 100;
-
-    int x1 = 120;
-    int y1 = 0;
-
-    int x2 =100;
-    int y2 = 0;
-
-   
-
-    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
-    oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxheart, 0, true, false, false, false, false);
-    oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxheart, 0, true, false, false, false, false);
-   
     consoleDemoInit();
-
-    printf("PAD:Scroll background");
+    printf("=== DODGE THE ROCKS ===\n");
+    printf("HD-Pad : Move Player\n");
+    printf("Score    : %d\n", score);
+    printf("Hi-Score : %d\n", hiScore);
 
     while(1){
         swiWaitForVBlank();
 
-         oamSetXY(&oamMain, 0, x0, y0);
-         oamSetXY(&oamMain, 1, x1, y1);
-         oamSetXY(&oamMain, 2, x2, y2);
-        
-        // 回転・拡大縮小
+        scanKeys();
+        u16 keys_held = keysHeld();
+        u16 keys_down = keysDown();
+
+        if (!isGameOver) {
+            if ((keys_held & KEY_LEFT) && x0 > 0)    x0 -= 2;
+            if ((keys_held & KEY_RIGHT) && x0 < 224) x0 += 2;
+            if ((keys_held & KEY_UP) && y0 > 0)      y0 -= 2;
+            if ((keys_held & KEY_DOWN) && y0 < 160)  y0 += 2;
+
+            y1 += speed1_y;
+            if (y1 > 192) {
+                y1 = -32;
+                x1 = rand() % 224;
+                speed1_y = 1 + (rand() % 3);
+            }
+
+            y2 += speed2_y;
+            if (y2 > 192) {
+                y2 = -32;
+                x2 = rand() % 224;
+                speed2_y = 2 + (rand() % 2);
+            }
+
+            score++;
+            if(score > hiScore){
+                hiScore = score;
+            }
+
+            printf("\x1b[5;13H%d", score);
+            printf("\x1b[6;13H%d\n", hiScore);
+
+            if ((abs(x0 - x1) < 20 && abs(y0 - y1) < 20) || 
+                (abs(x0 - x2) < 20 && abs(y0 - y2) < 20)) {
+                
+                isGameOver = true;
+                
+                printf("====================\n");
+                printf("*** GAME OVER ***\n");
+                printf("Press A to Retry!\n");
+                printf("====================\n");
+            }
+        } else {
+            if (keys_down & KEY_A) {
+                x0 = 112;
+                y0 = 150;
+                x1 = rand() % 224;
+                y1 = -32;
+                x2 = rand() % 224;
+                y2 = -64;
+                speed1_y = 1 + (rand() % 3);
+                speed2_y = 2 + (rand() % 2);
+                score = 0;
+                isGameOver = false;
+
+                printf("=== DODGE THE ROCKS ===\n");
+                printf("D-Pad : Move Player\n");
+                printf("Score    : %d\n", score);
+                printf("Hi-Score : %d\n", hiScore);
+            }
+        }
+
+        oamSetXY(&oamMain, 0, x0, y0);
+        oamSetXY(&oamMain, 1, x1, y1);
+        oamSetXY(&oamMain, 2, x2, y2);
         
         oamUpdate(&oamMain);
-
-
-
-        scanKeys();
-
-
-
-        u16 keys_held = keysHeld();
-
-        // キーを押したら移動
-        if((abs(x0-x1)< 10 && abs(y0-y1)<10) || (abs(x0-x2)<10 && abs(y0-y2)<10)){
-            printf("\x1b[10;10HGAME OVER!");
-            printf("\x1b[12;5HPress A to Restart");
-        }else{
-             if (keys_held & KEY_LEFT) {
-            x0--;
-        }
-        if (keys_held & KEY_RIGHT) {
-            x0++;
-        }
-        if (keys_held & KEY_UP) {
-            y0--;
-        }
-        if (keys_held & KEY_DOWN) {
-            y0++;
-        }
-
-        x1 += 2;
-        y1 += 1;
-
-        x2 += 0;
-        y2 += 1;
-
-     
-
-        
-
-        if (y1 > 192) {
-            y1 = -32;
-        }
-        if(y2 >192){
-            y2= -32;
-        }
-
-       
-        }
     }
     return 0;
 }
-    
-
-
