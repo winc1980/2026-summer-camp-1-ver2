@@ -13,6 +13,9 @@
 #include "nds/interrupts.h"
 #include "nds/ndstypes.h"
 #include "clang.h"
+
+
+
 int main(int argc, char **argv)
 {
     videoSetMode(MODE_0_2D);
@@ -45,12 +48,15 @@ int main(int argc, char **argv)
 
     printf("PAD:Scroll background");
 
-   
+   int angle = 0;
+   int scale = 0;
 
     while(1){
-         oamSetXY(&oamMain, 0, x, y);
-        // 回転・拡大縮小
-        
+        swiWaitForVBlank();
+        oamSetXY(&oamMain, 0, x, y);
+      
+        oamRotateScale(&oamMain, 0, degreesToAngle(angle), (1 << 8) + scale * (1 << 3), (1 << 8) + scale * (1 << 3));
+
         oamUpdate(&oamMain);
 
         scanKeys();
@@ -62,6 +68,11 @@ int main(int argc, char **argv)
         if (keys_held & KEY_LEFT) x--;
         if (keys_held & KEY_DOWN) y++;
         if (keys_held & KEY_RIGHT) x++;
+
+        if (keys_held & KEY_A) angle--;
+        if (keys_held & KEY_B) scale++;
+        if (keys_held & KEY_X) scale--;
+        if (keys_held & KEY_Y) angle++;
     }
     return 0;
 
