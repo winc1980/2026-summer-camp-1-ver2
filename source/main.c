@@ -1,16 +1,18 @@
 // source/main.c
 #include <nds.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include "bg0.h"
 #include "nds/arm9/background.h"
 #include "nds/arm9/console.h"
 #include "nds/arm9/input.h"
+#include "nds/arm9/sprite.h"
 #include "nds/arm9/video.h"
 #include "nds/input.h"
 #include "nds/interrupts.h"
 #include "nds/ndstypes.h"
-
+#include "clang.h"
 int main(int argc, char **argv)
 {
     videoSetMode(MODE_0_2D);
@@ -26,32 +28,40 @@ int main(int argc, char **argv)
 
     bgShow(bg);
 
+
+    vramSetBankB(VRAM_B_MAIN_SPRITE);
+    oamInit(&oamMain,SpriteMapping_1D_32,false);
+    u16 *gfxMain = oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_16Color);
+
+    memcpy(gfxMain, clangTiles, clangTilesLen);
+    memcpy(SPRITE_PALETTE, clangPal, clangPalLen);
+
+    int x = 128 - 32;
+    int y = 92 - 32;
+
+    oamSet(&oamMain, 0, x, y, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
+
     consoleDemoInit();
 
     printf("PAD:Scroll background");
 
-    int x=0,y=0;
+   
 
     while(1){
-        swiWaitForVBlank();
-        bgSetScroll(bg, x, y);
-        bgUpdate();
+         oamSetXY(&oamMain, 0, x, y);
+        // 回転・拡大縮小
+        
+        oamUpdate(&oamMain);
+
         scanKeys();
 
         u16 keys_held = keysHeld();
 
-        if(keys_held & KEY_LEFT){
-            x++;
-        }
-        if(keys_held & KEY_RIGHT){
-            x--;
-        }
-        if(keys_held & KEY_UP){
-            y++;
-        }
-        if(keys_held & KEY_DOWN){
-            y--;
-        }
+        // キーを押したら移動
+        if (keys_held & KEY_UP) y--;
+        if (keys_held & KEY_LEFT) x--;
+        if (keys_held & KEY_DOWN) y++;
+        if (keys_held & KEY_RIGHT) x++;
     }
     return 0;
 
