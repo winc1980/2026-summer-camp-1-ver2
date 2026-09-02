@@ -62,6 +62,7 @@ int main(int argc, char **argv)
         scanKeys();
 
         u16 keys_held = keysHeld();
+        u32 down = keysDown();
 
         // キーを押したら移動
         if (keys_held & KEY_UP) y--;
@@ -69,10 +70,10 @@ int main(int argc, char **argv)
         if (keys_held & KEY_DOWN) y++;
         if (keys_held & KEY_RIGHT) x++;
 
-        if (keys_held & KEY_A) angle--;
+        if (down & KEY_A) angle-=90;
         if (keys_held & KEY_B) scale++;
         if (keys_held & KEY_X) scale--;
-        if (keys_held & KEY_Y) angle++;
+        if (down & KEY_Y) angle+=90;
     }
     return 0;
 
