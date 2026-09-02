@@ -1,0 +1,7 @@
+build/
+.cache/
+*.nds
+*.elf
+*.map
+*.dump
+compile_commands.json

@@ -1,0 +1,32 @@
+{
+  "name": "nds",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/work",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/work,type=bind",
+  "remoteUser": "dev",
+  "containerEnv": {
+    "WONDERFUL_TOOLCHAIN": "/opt/wonderful",
+    "BLOCKSDS": "/opt/wonderful/thirdparty/blocksds/core"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "llvm-vs-code-extensions.vscode-clangd"
+      ],
+      "settings": {
+        "clangd.path": "/usr/bin/clangd",
+        // arm-none-eabi-gcc に「標準ヘッダはどこか」を問い合わせさせる。
+        // これが無いと clangd が assert.h / nds.h を見つけられない。
+        "clangd.arguments": [
+          "--query-driver=/opt/wonderful/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-*"
+        ],
+        "C_Cpp.intelliSenseEngine": "disabled",
+        "files.watcherExclude": {
+          "**/build/**": true
+        }
+      }
+    }
+  }
+}
