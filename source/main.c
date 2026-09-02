@@ -2,6 +2,7 @@
 #include <nds.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "bg0.h"
 #include "nds/arm9/background.h"
@@ -44,6 +45,13 @@ int main(int argc, char **argv)
 
     memcpy(gfxMain, clangTiles, clangTilesLen);
     memcpy(SPRITE_PALETTE, clangPal, clangPalLen);
+ 
+    u16 *gfxheart = oamAllocateGfx(&oamMain, SpriteSize_64x64, SpriteColorFormat_256Color);
+    memcpy(gfxheart,rockTiles,rockTilesLen);
+    memcpy(SPRITE_PALETTE,rockPal, rockPalLen);
+    
+
+
 
     int x0 = 100;
     int y0 = 100;
@@ -51,9 +59,15 @@ int main(int argc, char **argv)
     int x1 = 120;
     int y1 = 0;
 
-    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
-    oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
+    int x2 =100;
+    int y2 = 0;
 
+   
+
+    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxMain, 0, true, false, false, false, false);
+    oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxheart, 0, true, false, false, false, false);
+    oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_16Color, gfxheart, 0, true, false, false, false, false);
+   
     consoleDemoInit();
 
     printf("PAD:Scroll background");
@@ -63,16 +77,22 @@ int main(int argc, char **argv)
 
          oamSetXY(&oamMain, 0, x0, y0);
          oamSetXY(&oamMain, 1, x1, y1);
+         oamSetXY(&oamMain, 2, x2, y2);
+        
         // 回転・拡大縮小
         
         oamUpdate(&oamMain);
 
+
+
         scanKeys();
+
+
 
         u16 keys_held = keysHeld();
 
         // キーを押したら移動
-        if(abs(x0-x1)<10 && abs(y0-y1)<10){
+        if((abs(x0-x1)< 10 && abs(y0-y1)<10) || (abs(x0-x2)<10 && abs(y0-y2)<10)){
             printf("\x1b[10;10HGAME OVER!");
             printf("\x1b[12;5HPress A to Restart");
         }else{
@@ -89,11 +109,24 @@ int main(int argc, char **argv)
             y0++;
         }
 
+        x1 += 2;
         y1 += 1;
+
+        x2 += 0;
+        y2 += 1;
+
+     
+
+        
 
         if (y1 > 192) {
             y1 = -32;
         }
+        if(y2 >192){
+            y2= -32;
+        }
+
+       
         }
     }
     return 0;
