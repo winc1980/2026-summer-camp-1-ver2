@@ -118,8 +118,8 @@ int main(int argc, char **argv) {
 
   printf("UpperTale\n");
   printf("プレイヤーは攻撃を避けてください\n");
-  printf("Score    : \n");
-  printf("Hi-Score : \n");
+  printf("\x1b[4;10HScore    : \n");
+  printf("\x1b[5;10HHi-Score : \n");
 
   while (1) {
     swiWaitForVBlank();
@@ -167,8 +167,8 @@ int main(int argc, char **argv) {
         hiScore = score;
       }
 
-      printf("\x1b[3;13H%d", score);
-      printf("\x1b[4;13H%d\n", hiScore);
+      printf("\x1b[4;21H%d", score);
+      printf("\x1b[5;21H%d\n", hiScore);
 
       if ((abs(x0 - x1) < 20 && abs(y0 - y1) < 20) ||
           (abs(x0 - x2) < 20 && abs(y0 - y2) < 20) ||
@@ -177,10 +177,10 @@ int main(int argc, char **argv) {
 
         GameOver = true;
 
-        printf("\x1b[9;8H====================\n");
+        printf("\x1b[9;8H==================\n");
         printf("\x1b[10;8H*** GAME OVER ***\n");
         printf("\x1b[11;8HPress A to Retry!\n");
-        printf("\x1b[12;8H====================\n");
+        printf("\x1b[12;8H==================\n");
       }
     } else {
       if (keys_down & KEY_A) {
