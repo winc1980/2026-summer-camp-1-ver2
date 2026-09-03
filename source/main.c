@@ -78,6 +78,18 @@ int main(int argc, char **argv)
     printf("Score    : %d\n", score);
     printf("Hi-Score : %d\n", hiScore);
 
+    // スタートボタンを押したらゲームがスタートするようにした
+    printf("Pless Start Key and Start");
+
+    while (1) {
+    swiWaitForVBlank();
+    scanKeys();
+    u16 keys_down = keysDown();
+      if (keys_down & KEY_START) break;
+    }
+
+    consoleClear();
+
     while(1){
         swiWaitForVBlank();
 
