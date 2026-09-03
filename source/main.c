@@ -58,9 +58,6 @@ int main(int argc, char **argv)
     int x4 = rand() % 224;
     int y4 =  -64;
 
-    int x5 = rand() % 224;
-    int y5 = -30;
-
     int speed1_y = 1 + (rand() % 3);
     int speed2_y = 2 + (rand() % 2);
    
