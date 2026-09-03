@@ -41,8 +41,7 @@ int main(int argc, char **argv)
     memcpy(gfxheart,rockTiles,rockTilesLen);
     memcpy(SPRITE_PALETTE,rockPal,rockPalLen);
 
-// x0 y0がプレイヤーで、1 2 3 4が障害物、5がライフ
-
+    
     int x0=112;
     int y0=150;
 
