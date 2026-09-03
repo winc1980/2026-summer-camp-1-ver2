@@ -58,6 +58,8 @@ int main(int argc, char **argv)
     int x4 = rand() % 224;
     int y4 =  -64;
 
+    int x5 = rand() % 224;
+    int y5 = -30;
 
     int speed1_y = 1 + (rand() % 3);
     int speed2_y = 2 + (rand() % 2);
@@ -77,11 +79,6 @@ int main(int argc, char **argv)
     oamSet(&oamMain, 4, x4, y4, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
 
     consoleDemoInit();
-    printf("UpperTale\n");
-    printf("プレイヤーは攻撃を避けてください\n");
-    printf("Score    : %d\n", score);
-    printf("Hi-Score : %d\n", hiScore);
-
     
     // スタートボタンを押したらゲームがスタートするようにした
     printf("Pless Start Key and Start");
@@ -95,6 +92,12 @@ int main(int argc, char **argv)
 
 
     consoleClear();
+
+    printf("UpperTale\n");
+    printf("プレイヤーは攻撃を避けてください\n");
+    printf("Score    : \n");
+    printf("Hi-Score : \n" );
+
 
     while(1){
         swiWaitForVBlank();
@@ -139,8 +142,8 @@ int main(int argc, char **argv)
                 hiScore = score;
             }
 
-            printf("\x1b[5;13H%d", score);
-            printf("\x1b[6;13H%d\n", hiScore);
+            printf("\x1b[3;13H%d", score);
+            printf("\x1b[4;13H%d\n", hiScore);
 
             if ((abs(x0 - x1) < 20 && abs(y0 - y1) < 20) || 
                 (abs(x0 - x2) < 20 && abs(y0 - y2) < 20) || (abs(x0 - x3) < 20 && abs(y0 - y3) < 20)||
@@ -148,29 +151,15 @@ int main(int argc, char **argv)
                 
                 GameOver = true;
                 
-                printf("====================\n");
-                printf("*** GAME OVER ***\n");
-                printf("Press A to Retry!\n");
-                printf("====================\n");
-
-
-                // 背景設定
-                vramSetBankA(VRAM_A_MAIN_BG);
-    
-                int bgGameOver = bgInitHidden(0, BgType_Text8bpp, BgSize_B8_128x128, 0, 1);
-
-                memcpy(bgGetGfxPtr(bgGameOver), gameoverTiles, gameoverTilesLen);
-                memcpy(BG_PALETTE, bg0Pal, bg0PalLen);
-
-                bgShow(bgGameOver);
-
-                
-                
-
-
+                printf("\x1b[9;8H====================\n");
+                printf("\x1b[10;8H*** GAME OVER ***\n");
+                printf("\x1b[11;8HPress A to Retry!\n");
+                printf("\x1b[12;8H====================\n");
             }
         } else {
             if (keys_down & KEY_A) {
+                consoleClear();
+
                 x0 = 112;
                 y0 = 150;
 
@@ -194,8 +183,8 @@ int main(int argc, char **argv)
 
                 printf("UpperTale\n");
                 printf("プライヤーは攻撃を避けてください\n");
-                printf("Score    : %d\n", score);
-                printf("Hi-Score : %d\n", hiScore);
+                printf("Score    : \n");
+                 printf("Hi-Score : \n");
             }
         }
 
