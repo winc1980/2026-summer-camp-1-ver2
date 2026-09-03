@@ -1,10 +1,6 @@
 // source/main.c
-#include <nds.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "bg0.h"
+#include "clang.h"
 #include "nds/arm9/background.h"
 #include "nds/arm9/console.h"
 #include "nds/arm9/input.h"
@@ -13,10 +9,86 @@
 #include "nds/input.h"
 #include "nds/interrupts.h"
 #include "nds/ndstypes.h"
-#include "clang.h"
 #include "rock.h"
-#include "gameover.h"
+#include "title.h"
+#include <nds.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+int main(int argc, char **argv) {
+  const int spr_pal_main_clang = 3;
+  const int spr_pal_main_rock = 7;
+  videoSetMode(MODE_0_2D);
+
+  vramSetBankB(VRAM_B_MAIN_SPRITE);
+  oamInit(&oamMain, SpriteMapping_1D_128, true);
+
+  // 拡張パレットではcpuから書き込めない
+  // そのためlcdモードにして書き込む
+  vramSetBankF(VRAM_F_LCD);
+  u16 *gfxMain =
+      oamAllocateGfx(&oamMain, SpriteSize_16x16, SpriteColorFormat_256Color);
+  memcpy(gfxMain, clangTiles, clangTilesLen);
+  memcpy(VRAM_F_EXT_SPR_PALETTE[spr_pal_main_clang], clangPal, clangPalLen);
+
+  u16 *gfxheart =
+      oamAllocateGfx(&oamMain, SpriteSize_32x32, SpriteColorFormat_256Color);
+  memcpy(gfxheart, rockTiles, rockTilesLen);
+  memcpy(VRAM_F_EXT_SPR_PALETTE[spr_pal_main_rock], rockPal, rockPalLen);
+
+  // 拡張パレットのモードに変更
+  vramSetBankF(VRAM_F_SPRITE_EXT_PALETTE);
+
+  int x0 = 112;
+  int y0 = 150;
+
+  int x1 = rand() % 200;
+  int y1 = -30;
+
+  int x2 = rand() % 200;
+  int y2 = -60;
+
+  int x3 = 100;
+  int y3 = 100;
+
+  int x4 = rand() % 224;
+  int y4 = -64;
+
+  int speed1_y = 1 + (rand() % 3);
+  int speed2_y = 2 + (rand() % 2);
+
+  int speed4_y = 1 + (rand() % 2);
+
+  int score = 0;
+  int hiScore = 0;
+  bool GameOver = false;
+
+  oamSet(&oamMain, 0, x0, y0, 0, spr_pal_main_clang, SpriteSize_16x16,
+         SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false,
+         false);
+  oamSet(&oamMain, 1, x1, y1, 0, spr_pal_main_rock, SpriteSize_32x32,
+         SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false,
+         false);
+  oamSet(&oamMain, 2, x2, y2, 0, spr_pal_main_rock, SpriteSize_32x32,
+         SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false,
+         false);
+  oamSet(&oamMain, 3, x3, y3, 0, spr_pal_main_rock, SpriteSize_32x32,
+         SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false,
+         false);
+  oamSet(&oamMain, 4, x4, y4, 0, spr_pal_main_rock, SpriteSize_32x32,
+         SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false,
+         false);
+
+  consoleDemoInit();
+
+  // スタートボタンを押したらゲームがスタートするようにした
+  printf("Pless Start Key and Start");
+
+  while (1) {
+    // スタート画面を表示します。これは背景です
+    vramSetBankA(VRAM_A_MAIN_BG);
 
 
 
@@ -119,10 +191,22 @@ int main(int argc, char **argv)
 
     while (1) {
     swiWaitForVBlank();
+
     scanKeys();
     u16 keys_down = keysDown();
-      if (keys_down & KEY_START) break;
-    }
+    if (keys_down & KEY_START)
+      break;
+  }
+
+  vramSetBankA(VRAM_A_MAIN_BG);
+  int bg = bgInitHidden(0, BgType_Text8bpp, BgSize_B8_256x256, 0, 1);
+  memcpy(bgGetGfxPtr(bg), bg0Tiles, bg0TilesLen);
+  memcpy(bgGetMapPtr(bg), bg0Map, bg0MapLen);
+  memcpy(BG_PALETTE, bg0Pal, bg0PalLen);
+
+  bgShow(bg);
+
+  consoleClear();
 
    
 
