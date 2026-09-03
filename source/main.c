@@ -152,6 +152,22 @@ int main(int argc, char **argv)
                 printf("*** GAME OVER ***\n");
                 printf("Press A to Retry!\n");
                 printf("====================\n");
+
+
+                // 背景設定
+                vramSetBankA(VRAM_A_MAIN_BG);
+    
+                int bgGameOver = bgInitHidden(0, BgType_Text8bpp, BgSize_B8_128x128, 0, 1);
+
+                memcpy(bgGetGfxPtr(bgGameOver), gameoverTiles, gameoverTilesLen);
+                memcpy(BG_PALETTE, bg0Pal, bg0PalLen);
+
+                bgShow(bgGameOver);
+
+                
+                
+
+
             }
         } else {
             if (keys_down & KEY_A) {
