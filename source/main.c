@@ -1,4 +1,8 @@
-// source/main.c
+#include <nds.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "bg0.h"
 #include "clang.h"
 #include "nds/arm9/background.h"
@@ -9,6 +13,7 @@
 #include "nds/input.h"
 #include "nds/interrupts.h"
 #include "nds/ndstypes.h"
+#include "clang.h"
 #include "rock.h"
 #include "title.h"
 #include <nds.h>
