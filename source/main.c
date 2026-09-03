@@ -18,6 +18,8 @@
 #include "gameover.h"
 
 
+
+
 int main(int argc, char **argv)
 {
     videoSetMode(MODE_0_2D);
@@ -41,8 +43,25 @@ int main(int argc, char **argv)
     memcpy(gfxheart,rockTiles,rockTilesLen);
     memcpy(SPRITE_PALETTE,rockPal,rockPalLen);
 
+    consoleDemoInit();
+
 // x0 y0がプレイヤーで、1 2 3 4が障害物、5がライフ
 
+    //難易度選択
+    
+    printf("Select difficulty level\n");
+    printf("basic Y\n");
+    printf("Pless Y\n");
+    printf("standerd X\n");
+    printf("Pless X\n");
+
+    while(1){
+    swiWaitForVBlank();
+    scanKeys();
+    u16 keys_down = keysDown();
+    if (keys_down & KEY_X) {
+
+    
     int x0=112;
     int y0=150;
 
@@ -58,8 +77,7 @@ int main(int argc, char **argv)
     int x4 = rand() % 224;
     int y4 =  -64;
 
-    int x5 = rand() % 224;
-    int y5 = -30;
+    
 
     int speed1_y = 1 + (rand() % 3);
     int speed2_y = 2 + (rand() % 2);
@@ -72,6 +90,8 @@ int main(int argc, char **argv)
     int hiScore=0;
     bool GameOver=false;
 
+   
+
     oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_16x16, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
     oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
     oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
@@ -79,7 +99,8 @@ int main(int argc, char **argv)
     oamSet(&oamMain, 4, x4, y4, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
 
     consoleDemoInit();
-    
+
+
     // スタートボタンを押したらゲームがスタートするようにした
     printf("Pless Start Key and Start");
 
@@ -90,6 +111,10 @@ int main(int argc, char **argv)
       if (keys_down & KEY_START) break;
     }
 
+   
+
+   
+
 
     consoleClear();
 
@@ -98,6 +123,8 @@ int main(int argc, char **argv)
     printf("Score    : \n");
     printf("Hi-Score : \n" );
 
+
+    
 
     while(1){
         swiWaitForVBlank();
@@ -157,6 +184,9 @@ int main(int argc, char **argv)
                 printf("\x1b[12;8H====================\n");
             }
         } else {
+            
+            
+            
             if (keys_down & KEY_A) {
                 consoleClear();
 
@@ -179,6 +209,8 @@ int main(int argc, char **argv)
               
                 
                 score = 0;
+
+                
                 GameOver = false;
 
                 printf("UpperTale\n");
@@ -195,5 +227,164 @@ int main(int argc, char **argv)
         oamSetXY(&oamMain, 4, x4, y4);
         oamUpdate(&oamMain);
     }
+
     return 0;
+
+
+ }
+    if(keys_down & KEY_Y){
+    int x0=112;
+    int y0=150;
+
+    int x1=rand() % 200;
+    int y1=-30;
+
+    int x2 = rand() % 200;
+    int y2 = -60;
+
+    
+
+    
+
+    int speed1_y = 1 + (rand() % 3);
+    int speed2_y = 2 + (rand() % 2);
+   
+ 
+    
+    
+    
+    int score=0;
+    int hiScore=0;
+    bool GameOver=false;
+
+   
+
+    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_16x16, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
+    oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
+    oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
+    
+
+    consoleDemoInit();
+
+
+         // スタートボタンを押したらゲームがスタートするようにした
+    printf("Pless Start Key and Start");
+
+    while (1) {
+    swiWaitForVBlank();
+    scanKeys();
+    u16 keys_down = keysDown();
+      if (keys_down & KEY_START) break;
+    }
+
+   
+
+   
+
+
+    consoleClear();
+
+    printf("UpperTale\n");
+    printf("プレイヤーは攻撃を避けてください\n");
+    printf("Score    : \n");
+    printf("Hi-Score : \n" );
+
+
+    
+
+    while(1){
+        swiWaitForVBlank();
+
+        scanKeys();
+        u16 keys_held = keysHeld();
+        u16 keys_down = keysDown();
+
+        if (!GameOver) {
+            if ((keys_held & KEY_LEFT) && x0 > 0)    x0 -= 2;
+            if ((keys_held & KEY_RIGHT) && x0 < 224) x0 += 2;
+            if ((keys_held & KEY_UP) && y0 > 0)      y0 -= 2;
+            if ((keys_held & KEY_DOWN) && y0 < 160)  y0 += 2;
+
+            y1 += speed1_y;
+            if (y1 > 192) {
+                y1 = -32;
+                x1 = rand() % 200;
+                speed1_y = 1 + (rand() % 10);
+            }
+
+            y2 += speed2_y;
+            if (y2 > 192) {
+                y2 = -32;
+                x2 = rand() % 200;
+                speed2_y = 2 + (rand() % 10);
+            }
+
+           
+
+            score++;
+            if(score > hiScore){
+                hiScore = score;
+            }
+
+            printf("\x1b[3;13H%d", score);
+            printf("\x1b[4;13H%d\n", hiScore);
+
+            if ((abs(x0 - x1) < 20 && abs(y0 - y1) < 20) || 
+                (abs(x0 - x2) < 20 && abs(y0 - y2) < 20) ) {
+                
+                GameOver = true;
+                
+                printf("\x1b[9;8H====================\n");
+                printf("\x1b[10;8H*** GAME OVER ***\n");
+                printf("\x1b[11;8HPress A to Retry!\n");
+                printf("\x1b[12;8H====================\n");
+            }
+        } else {
+            
+            
+            
+            if (keys_down & KEY_A) {
+                consoleClear();
+
+                x0 = 112;
+                y0 = 150;
+
+                x1 = rand() % 224;
+                y1 = -32;
+
+                x2 = rand() % 224;
+                y2 = -64;
+               
+
+
+
+                speed1_y = 1 + (rand() % 3);
+                speed2_y = 2 + (rand() % 2);
+              
+                
+                score = 0;
+                GameOver = false;
+
+                printf("UpperTale\n");
+                printf("プライヤーは攻撃を避けてください\n");
+                printf("Score    : \n");
+                 printf("Hi-Score : \n");
+            }
+        }
+
+        oamSetXY(&oamMain, 0, x0, y0);
+        oamSetXY(&oamMain, 1, x1, y1);
+        oamSetXY(&oamMain, 2, x2, y2);
+      
+        oamUpdate(&oamMain);
+    }
+
+    return 0;
+
+
+
+    }
+    }
+     return 0;
+    
 }
