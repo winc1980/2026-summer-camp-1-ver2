@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     vramSetBankB(VRAM_B_MAIN_SPRITE);
     oamInit(&oamMain,SpriteMapping_1D_128,false);
 
-    u16 *gfxMain = oamAllocateGfx(&oamMain,SpriteSize_32x32,SpriteColorFormat_256Color);
+    u16 *gfxMain = oamAllocateGfx(&oamMain,SpriteSize_16x16,SpriteColorFormat_256Color);
     memcpy(gfxMain,clangTiles,clangTilesLen);
     memcpy(SPRITE_PALETTE,clangPal,clangPalLen);
  
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
     int hiScore=0;
     bool GameOver=false;
 
-    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
+    oamSet(&oamMain, 0, x0, y0, 0, 0, SpriteSize_16x16, SpriteColorFormat_256Color, gfxMain, -1, false, false, false, false, false);
     oamSet(&oamMain, 1, x1, y1, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
     oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
     oamSet(&oamMain, 3, x3, y3, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
