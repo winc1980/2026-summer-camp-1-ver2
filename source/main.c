@@ -15,20 +15,14 @@
 #include "nds/ndstypes.h"
 #include "clang.h"
 #include "rock.h"
-#include "gameover.h"
+#include "title.h"
 
 
 int main(int argc, char **argv)
 {
     videoSetMode(MODE_0_2D);
 
-    vramSetBankA(VRAM_A_MAIN_BG);
-    int bg=bgInitHidden(0,BgType_Text8bpp,BgSize_B8_256x256,0,1);
-    memcpy(bgGetGfxPtr(bg),bg0Tiles,bg0TilesLen);
-    memcpy(bgGetMapPtr(bg),bg0Map,bg0MapLen);
-    memcpy(BG_PALETTE,bg0Pal,bg0PalLen);
-
-    bgShow(bg);
+    
 
     vramSetBankB(VRAM_B_MAIN_SPRITE);
     oamInit(&oamMain,SpriteMapping_1D_128,false);
@@ -41,7 +35,7 @@ int main(int argc, char **argv)
     memcpy(gfxheart,rockTiles,rockTilesLen);
     memcpy(SPRITE_PALETTE,rockPal,rockPalLen);
 
-    
+
     int x0=112;
     int y0=150;
 
@@ -79,16 +73,40 @@ int main(int argc, char **argv)
     // スタートボタンを押したらゲームがスタートするようにした
     printf("Pless Start Key and Start");
 
+    
+    
     while (1) {
-    swiWaitForVBlank();
+        // スタート画面を表示します。これは背景です
+        vramSetBankA(VRAM_A_MAIN_BG);
+        
+        int titlebg = bgInitHidden(0, BgType_Text8bpp, BgSize_B8_256x256, 0, 1);
+    
+        memcpy(bgGetGfxPtr(titlebg), titleTiles, titleTilesLen);
+        memcpy(bgGetMapPtr(titlebg), titleMap, titleMapLen);
+        memcpy(BG_PALETTE, titlePal, titlePalLen);
+
+        bgShow(titlebg);
+
+        swiWaitForVBlank();
+
+        
     scanKeys();
     u16 keys_down = keysDown();
       if (keys_down & KEY_START) break;
     }
 
 
+    vramSetBankA(VRAM_A_MAIN_BG);
+    int bg=bgInitHidden(0,BgType_Text8bpp,BgSize_B8_256x256,0,1);
+    memcpy(bgGetGfxPtr(bg),bg0Tiles,bg0TilesLen);
+    memcpy(bgGetMapPtr(bg),bg0Map,bg0MapLen);
+    memcpy(BG_PALETTE,bg0Pal,bg0PalLen);
+
+    bgShow(bg);
+
     consoleClear();
 
+    
     printf("UpperTale\n");
     printf("プレイヤーは攻撃を避けてください\n");
     printf("Score    : \n");
