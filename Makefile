@@ -2,7 +2,7 @@
 #
 # SPDX-FileContributor: Antonio Niño Díaz, 2024
 
-BLOCKSDS	?= /opt/blocksds/core
+BLOCKSDS	?= /opt/wonderful/thirdparty/blocksds/core
 
 # User config
 
@@ -16,5 +16,11 @@ COMPDB := 1
 # -----------------
 
 GFXDIRS		:= graphics
+
+
+LIBS    := -lmm9 -lnds9
+LIBDIRS		:= $(BLOCKSDS)/libs/maxmod
+AUDIODIRS    :=  audio
+
 
 include $(BLOCKSDS)/sys/default_makefiles/rom_arm9/Makefile

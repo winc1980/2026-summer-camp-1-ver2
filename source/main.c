@@ -1,9 +1,11 @@
 // source/main.c
 #include "bg0.h"
 #include "clang.h"
+
 #include "nds/arm9/background.h"
 #include "nds/arm9/console.h"
 #include "nds/arm9/input.h"
+#include "nds/arm9/sound.h"
 #include "nds/arm9/sprite.h"
 #include "nds/arm9/video.h"
 #include "nds/input.h"
@@ -17,7 +19,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "soundbank.h"
+#include "soundbank_bin.h"
+#include "mm_types.h"
+#include <maxmod9.h>
+#include <maxmod.h>
+
 int main(int argc, char **argv) {
+   soundEnable();
+   mmInitDefaultMem((mm_addr)soundbank_bin);
+   mmLoad(MOD_MEGALOVANIA);
+
   const int spr_pal_main_clang = 3;
   const int spr_pal_main_rock = 7;
   videoSetMode(MODE_0_2D);
@@ -85,6 +97,8 @@ int main(int argc, char **argv) {
 
   // スタートボタンを押したらゲームがスタートするようにした
   printf("Pless Start Key and Start");
+
+  mmStart(MOD_MEGALOVANIA, MM_PLAY_LOOP);
 
   while (1) {
     // スタート画面を表示します。これは背景です
