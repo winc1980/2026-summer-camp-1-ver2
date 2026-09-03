@@ -45,23 +45,35 @@ int main(int argc, char **argv)
 
     consoleDemoInit();
 
-// x0 y0がプレイヤーで、1 2 3 4が障害物、5がライフ
+// x0 y0がプレイヤーで、1 2 3 4が障害物、
 
     //難易度選択
     
-    printf("Select difficulty level\n");
-    printf("basic Y\n");
-    printf("Pless Y\n");
-    printf("standerd X\n");
-    printf("Pless X\n");
+   
+
+  
+    
+
 
     while(1){
     swiWaitForVBlank();
     scanKeys();
     u16 keys_down = keysDown();
-    if (keys_down & KEY_X) {
 
     
+        
+    printf("Select difficulty level\n");
+    printf("basic Y\n");
+    printf("Pless Y\n");
+    printf("standerd X\n");
+    printf("Pless X\n");
+    
+    
+
+    if (keys_down & KEY_X) {
+       
+ 
+   
     int x0=112;
     int y0=150;
 
@@ -99,6 +111,7 @@ int main(int argc, char **argv)
     oamSet(&oamMain, 4, x4, y4, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
 
     consoleDemoInit();
+    
 
 
     // スタートボタンを押したらゲームがスタートするようにした
@@ -132,6 +145,9 @@ int main(int argc, char **argv)
         scanKeys();
         u16 keys_held = keysHeld();
         u16 keys_down = keysDown();
+
+      
+        
 
         if (!GameOver) {
             if ((keys_held & KEY_LEFT) && x0 > 0)    x0 -= 2;
@@ -229,9 +245,11 @@ int main(int argc, char **argv)
     }
 
     return 0;
-
+    
+    
 
  }
+
     if(keys_down & KEY_Y){
     int x0=112;
     int y0=150;
@@ -293,6 +311,8 @@ int main(int argc, char **argv)
     
 
     while(1){
+
+
         swiWaitForVBlank();
 
         scanKeys();
@@ -383,8 +403,9 @@ int main(int argc, char **argv)
 
 
 
-    }
+       }
     }
      return 0;
     
 }
+    
