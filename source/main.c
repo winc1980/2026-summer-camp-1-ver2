@@ -15,6 +15,8 @@
 #include "nds/ndstypes.h"
 #include "clang.h"
 #include "rock.h"
+#include "gameover.h"
+
 
 int main(int argc, char **argv)
 {
@@ -47,7 +49,7 @@ int main(int argc, char **argv)
     int x1=rand() % 200;
     int y1=-30;
 
-    int x2=rand() % 200;
+    int x2 = rand() % 200;
     int y2 = -60;
 
     int x3 = 100;
@@ -56,8 +58,6 @@ int main(int argc, char **argv)
     int x4 = rand() % 224;
     int y4 =  -64;
 
-    int x5 = rand() %
-    int y5 = -30;
 
     int speed1_y = 1 + (rand() % 3);
     int speed2_y = 2 + (rand() % 2);
@@ -75,7 +75,6 @@ int main(int argc, char **argv)
     oamSet(&oamMain, 2, x2, y2, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
     oamSet(&oamMain, 3, x3, y3, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
     oamSet(&oamMain, 4, x4, y4, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
-    oamSet(&oamMain, 5, x5, y5, 0, 0, SpriteSize_32x32, SpriteColorFormat_256Color, gfxheart, -1, false, false, false, false, false);
 
     consoleDemoInit();
     printf("UpperTale\n");
